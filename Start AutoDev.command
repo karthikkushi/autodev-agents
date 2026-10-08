@@ -3,4 +3,5 @@
 # pipeline worker starts — unfinished projects resume where they stopped.
 # Closing this window stops everything; progress is saved after every step.
 cd "$(dirname "$0")"
-exec python3 main.py
+PY=python3; [ -x .venv/bin/python ] && PY=.venv/bin/python
+exec "$PY" main.py

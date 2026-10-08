@@ -58,16 +58,31 @@ flowchart LR
 
 ## Quick start
 
+One line, on macOS or Linux (Windows: inside WSL) — it downloads AutoDev, installs it, asks for a
+free API key and opens the dashboard:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/karthikkushi/autodev-agents/main/install.sh | bash
+```
+
+Run the same line again any time to update and start it. Needs Python 3.10+ and git.
+
+Then press **Upload** in the dashboard to add your design (a Markdown file describing what you
+want — `design_inbox/tip_calculator.md` is a complete example) and press **Start**. Built
+projects land in `~/autodev-agents/projects/<name>/`.
+
+<details><summary>Manual install</summary>
+
 ```bash
 git clone https://github.com/karthikkushi/autodev-agents.git
 cd autodev-agents
-pip3 install -r requirements.txt
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env      # add at least one free API key
-python3 main.py           # opens the dashboard at http://localhost:8081/ui
+.venv/bin/python main.py  # opens the dashboard at http://localhost:8081/ui
 ```
+</details>
 
-Then upload a design from the dashboard (or drop it into `design_inbox/`) and press **Start**.
-`design_inbox/tip_calculator.md` is a complete example. Built projects land in `projects/<name>/`.
+You need at least one free key (the installer asks for the Gemini one):
 
 | Provider | Free key at | Env var |
 |---|---|---|

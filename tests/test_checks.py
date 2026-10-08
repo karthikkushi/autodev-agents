@@ -311,6 +311,20 @@ def test_merge_refuses_patches_that_lose_content(tmp_path):
     assert (src / "app.css").read_text() == "a{color:red}\n"  # a real optimization still lands
 
 
+def test_an_unlinked_theme_stylesheet_is_a_blocker(tmp_path):
+    # The page's colours were var(--accent) from a styles.css no page linked.
+    src = tmp_path / "site" / "src"
+    (src / "css").mkdir(parents=True)
+    (src / "css" / "styles.css").write_text(":root { --accent: #0d9488; --surface: #fff; }\n")
+    (src / "input.css").write_text(":root { --unused: 1px; }\n")   # a leftover that defines nothing the page uses
+    page = '<script>tailwind.config = {colors: {accent: "var(--accent)"}}</script>\n'
+    (src / "index.html").write_text(page)
+    found = [(f["file"], f["code"]) for f in sc.web_check(str(tmp_path / "site")) if f["severity"] == "HIGH"]
+    assert found == [("src/css/styles.css", "unlinked-stylesheet")]
+    (src / "index.html").write_text('<link rel="stylesheet" href="css/styles.css">\n' + page)
+    assert not [f for f in sc.web_check(str(tmp_path / "site")) if f["code"] == "unlinked-stylesheet"]
+
+
 def test_a_missing_photo_is_a_note_not_a_blocker(tmp_path):
     src = tmp_path / "site" / "src"
     src.mkdir(parents=True)

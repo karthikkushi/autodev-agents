@@ -287,6 +287,21 @@ def web_check(project_path: str) -> list[dict]:
             if js.resolve() not in linked:
                 findings.append(_finding("web", _rel(str(js), root), 0, "MEDIUM", "unused-script",
                                          "no page loads this script and no script imports it, so it never runs"))
+        # A stylesheet no page links, holding the theme the page uses: a
+        # portfolio's colours all pointed at var(--accent) from a styles.css
+        # nothing linked, so it rendered black and white.
+        sheets = [p for p in sorted(src.rglob("*.css")) if not {".venv", "node_modules"} & set(p.parts)]
+        pages_text = "".join(p.read_text(errors="replace") for p in sorted(src.rglob("*.html"))
+                             if not {".venv", "node_modules"} & set(p.parts))
+        defs = lambda text: set(re.findall(r"(--[\w-]+)\s*:", text))
+        known = defs(pages_text).union(*(defs(c.read_text(errors="replace")) for c in sheets if c.resolve() in linked))
+        wanted = set(re.findall(r"var\(\s*(--[\w-]+)", pages_text)) - known
+        for css in sheets:
+            missing = sorted(wanted & defs(css.read_text(errors="replace"))) if css.resolve() not in linked else []
+            if missing:
+                findings.append(_finding("web", _rel(str(css), root), 0, "HIGH", "unlinked-stylesheet",
+                                         f"the page uses {', '.join(missing[:4])} from this file, but no page links "
+                                         f'it — add <link rel="stylesheet" href="{css.relative_to(src)}"> to <head>'))
     # Only stylesheets a page actually loads: a leftover Tailwind input file
     # that nothing links doesn't change what the page looks like.
     for css in sorted(src.rglob("*.css")):
