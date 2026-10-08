@@ -4,7 +4,7 @@
 
 **Drop in a design doc. Get back a working, tested, reviewed project — built by 17 AI agents on free LLM tiers.**
 
-![Python](https://img.shields.io/badge/python-3.11+-blue) ![LLM cost](https://img.shields.io/badge/LLM%20cost-%240-brightgreen) ![LangGraph](https://img.shields.io/badge/LangGraph-agents-purple) ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![Python](https://img.shields.io/badge/python-3.10+-blue) ![LLM cost](https://img.shields.io/badge/LLM%20cost-%240-brightgreen) ![LangGraph](https://img.shields.io/badge/LangGraph-agents-purple) ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 
 <img src="assets/dashboard.png" alt="AutoDev dashboard: the pipeline's progress, the agent and AI model working right now, AI calls and a live preview of the site being built" width="900">
 
@@ -237,4 +237,4 @@ intake → planner (+ reflect) → research: web / GitHub / libraries → merge 
 
 ## License
 
-MIT
+Apache License 2.0 — see [LICENSE](LICENSE).
