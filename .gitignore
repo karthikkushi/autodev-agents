@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.env
+.github_config
+.pending_approval
+.github_approved
+projects/
+logs/
+.DS_Store
+.github_rejected
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.sqlite
+# Your own designs stay private; only the example is published.
+design_inbox/*
+!design_inbox/tip_calculator.md
