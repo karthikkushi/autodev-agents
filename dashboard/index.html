@@ -773,7 +773,7 @@ function renderPreviewOptions() {
 function showPreview(name, port) {
   S.preview.name = name; S.preview.url = previewUrl(port);
   $('preview-project').value = name;
-  $('preview-empty').hidden = true; $('preview-frame').hidden = false; $('preview-frame').src = S.preview.url;
+  $('preview-empty').hidden = true; $('preview-frame').hidden = false; $('preview-frame').src = S.preview.url + '?v=' + Date.now();  // a new address, so the frame always reloads
   $('btn-preview-reload').hidden = false; $('btn-preview-open').hidden = false; $('btn-preview-open').href = S.preview.url;
   $('preview-sub').textContent = `${name} — live: click around like a visitor would`;
   layoutPreview();
@@ -794,7 +794,7 @@ function layoutPreview() {
 }
 if (window.ResizeObserver) new ResizeObserver(() => layoutPreview()).observe($('preview-stage'));
 $('btn-preview').onclick = () => startPreview();
-$('btn-preview-reload').onclick = () => { if (S.preview.url) $('preview-frame').src = S.preview.url; };
+$('btn-preview-reload').onclick = () => { if (S.preview.url) $('preview-frame').src = S.preview.url + '?v=' + Date.now(); };
 $('preview-device').addEventListener('click', e => {
   const b = e.target.closest('[data-d]'); if (!b) return;
   S.preview.device = b.dataset.d;

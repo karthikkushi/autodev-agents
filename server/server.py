@@ -921,6 +921,7 @@ PREVIEW_PORT = PORT + 1
 _preview = {"name": "", "target": ""}
 _HOP_HEADERS = {"connection", "keep-alive", "proxy-authenticate", "proxy-authorization", "te", "trailers",
                 "transfer-encoding", "upgrade", "host", "content-length", "content-encoding"}
+_CACHE_HEADERS = {"cache-control", "expires", "etag", "last-modified", "if-none-match", "if-modified-since"}
 preview_app = FastAPI(title="AutoDev live preview")
 
 
@@ -945,8 +946,10 @@ async def preview_proxy(path: str, request: Request):
     # Never hand the dashboard's access code to model-written code.
     cookie = "; ".join(c for c in request.headers.get("cookie", "").split("; ")
                        if c and not c.startswith("autodev_token="))
+    # Every project is served at this same address, so nothing may be cached:
+    # after switching projects the browser showed the previous one's page.
     headers = {k: v for k, v in request.headers.items()
-               if k.lower() not in _HOP_HEADERS | {"cookie", "x-autodev-token"}}
+               if k.lower() not in _HOP_HEADERS | _CACHE_HEADERS | {"cookie", "x-autodev-token"}}
     if cookie:
         headers["cookie"] = cookie
     url = f"{target}/{path}" + (f"?{request.url.query}" if request.url.query else "")
@@ -957,11 +960,12 @@ async def preview_proxy(path: str, request: Request):
         return Response(f"The app didn't answer: {e}", status_code=502, media_type="text/plain")
     out = Response(content=resp.content, status_code=resp.status_code)
     for key, value in resp.headers.multi_items():
-        if key.lower() in _HOP_HEADERS:
+        if key.lower() in _HOP_HEADERS | _CACHE_HEADERS:
             continue
         if key.lower() == "location" and value.startswith(target):
             value = value[len(target):] or "/"
         out.headers.append(key, value)
+    out.headers["cache-control"] = "no-store"
     return out
 
 

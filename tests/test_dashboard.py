@@ -43,9 +43,11 @@ def site(tmp_path):
     class Handler(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
             seen["cookie"] = self.headers.get("cookie", "")
+            seen["if-none-match"] = self.headers.get("if-none-match")
             body = b"<h1>Portfolio</h1>" if self.path == "/" else b"missing"
             self.send_response(200 if self.path == "/" else 404)
             self.send_header("Content-Type", "text/html")
+            self.send_header("Last-Modified", "Wed, 30 Sep 2026 10:00:00 GMT")
             self.end_headers()
             self.wfile.write(body)
 
@@ -67,6 +69,10 @@ def test_preview_relays_the_app_without_the_dashboard_code(site, monkeypatch):
     assert r.status_code == 200 and "Portfolio" in r.text
     assert "secret-code" not in seen["cookie"] and "session=abc" in seen["cookie"]
     assert client.get("/nope").status_code == 404
+    # Every project shares this address: switching projects showed the last one's cached page.
+    r = client.get("/", headers={"If-None-Match": '"old"'})
+    assert r.headers["cache-control"] == "no-store" and "last-modified" not in r.headers
+    assert seen["if-none-match"] is None
 
 
 def test_preview_is_locked_for_strangers_and_explains_when_nothing_runs(monkeypatch):
