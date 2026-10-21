@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 import psutil, uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, HTTPException, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 BASE_DIR = Path(__file__).parent.parent
@@ -441,6 +441,11 @@ async def websocket_endpoint(ws: WebSocket):
                 await reject_github()
     except WebSocketDisconnect:
         manager.disconnect(ws)
+
+
+@app.get("/")
+def root():
+    return RedirectResponse("/ui/")
 
 
 @app.get("/health")
