@@ -1,0 +1,3 @@
+# `ruff check .`: real bugs only (syntax errors, undefined names, unused code), not style.
+[lint]
+select = ["E9", "F"]

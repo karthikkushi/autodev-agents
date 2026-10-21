@@ -1,4 +1,4 @@
-from typing import TypedDict, List, Optional, Any
+from typing import TypedDict, List
 from datetime import datetime
 
 from pipeline.control import PROJECTS_DIR

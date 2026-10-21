@@ -44,7 +44,7 @@ def run_environment(state: AgentState) -> AgentState:
         ok, stdout, stderr = run_safe_command(safe_cmd, cwd=project_path)
         if ok:
             installed.append(safe_cmd)
-            console.print(f"[green]  ✅ Done[/green]")
+            console.print("[green]  ✅ Done[/green]")
         else:
             failed.append(f"{safe_cmd}: {stderr[:100]}")
             console.print(f"[red]  ❌ Failed: {stderr[:80]}[/red]")
@@ -85,7 +85,7 @@ Do NOT include actual source code files — just config/setup files.
     if failed:
         state["errors"].extend(failed)
 
-    console.print(f"[green]✅ Environment ready[/green]")
+    console.print("[green]✅ Environment ready[/green]")
     blog("environment", f"Done — {len(installed)} libs installed, scaffold ready")
     bstate({"current_agent": "environment", "phase": "coding"})
     state["phase"] = "coding"

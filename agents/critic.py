@@ -20,7 +20,7 @@ def run_critic_gate(state: AgentState) -> AgentState:
 
     research_passes = state.get("_research_passes", 0)
     if research_passes >= MAX_RESEARCH_PASSES:
-        console.print(f"[yellow]Critic: max research passes reached — proceeding anyway[/yellow]")
+        console.print("[yellow]Critic: max research passes reached — proceeding anyway[/yellow]")
         state["_critic_pass"] = True
         return state
 
@@ -54,7 +54,6 @@ Return ONLY valid JSON."""
             passed = data.get("pass", True)
             confidence = float(data.get("confidence", 0.8))
             gaps = data.get("gaps", [])
-            reason = data.get("reason", "")
 
             if passed:
                 console.print(f"[green]✅ Critic PASS (confidence: {confidence:.2f})[/green]")
