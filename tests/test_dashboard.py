@@ -59,6 +59,12 @@ def site(tmp_path):
     httpd.shutdown()
 
 
+def test_root_opens_the_dashboard(monkeypatch):
+    monkeypatch.setattr(srv, "_authorized", lambda conn: True)
+    r = TestClient(srv.app).get("/", follow_redirects=False)
+    assert r.status_code == 307 and r.headers["location"] == "/ui/"
+
+
 def test_preview_relays_the_app_without_the_dashboard_code(site, monkeypatch):
     target, seen = site
     monkeypatch.setattr(srv, "_preview", {"name": "demo", "target": target})

@@ -154,7 +154,7 @@ Return ONLY valid JSON array, no other text."""
     state["task_list"] = tasks
 
     write_doc(state["project_path"], "05_tasks.md",
-              f"# Task List\n\n" + "\n".join([f"- [ ] {t['name']}: {t['description']}" for t in state["task_list"]]))
+              "# Task List\n\n" + "\n".join([f"- [ ] {t['name']}: {t['description']}" for t in state["task_list"]]))
 
     log_agent(state, "planner", f"Created {len(state['task_list'])} tasks")
     console.print(f"[green]✅ Planner done — {len(state['task_list'])} tasks created[/green]")
