@@ -10,6 +10,10 @@
 
 </div>
 
+**What:** a pipeline of AI agents that turns a Markdown design doc into a small working project (code, tests, README), using only free AI model tiers.
+**For:** developers and small teams who want a reviewed first version of a small web page or Python tool without paying for AI calls.
+**Run:** `curl -fsSL https://raw.githubusercontent.com/karthikkushi/autodev-agents/main/install.sh | bash`, or see [Manual install](#quick-start); it needs one free API key.
+
 You write what you want in a Markdown file. AutoDev plans it, researches it, designs the UI,
 writes the code one task at a time, reviews it, tests it, screenshots it in a real browser,
 fixes what looks wrong, writes the README — and then **asks you on your phone** before it
@@ -123,6 +127,7 @@ the free models to try in order; `router/llm_router.py` calls them with
 
 `python3 -m pytest tests/ -q` checks the pipeline itself offline (reply
 parsing, the decision loop's rules, visual QA rollback) — no model calls.
+`python3 -m ruff check .` lints it for real bugs (rules in `ruff.toml`).
 
 `python3 tools/benchmark_models.py` benchmarks the free models on your
 account (a coding task scored by running pytest, plus a JSON task) — re-run it
